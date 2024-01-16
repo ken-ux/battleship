@@ -1,4 +1,4 @@
-import Ship from "./Ship";
+// import Ship from "./Ship";
 
 export default class Gameboard {
   constructor() {
@@ -7,20 +7,18 @@ export default class Gameboard {
   }
 
   createGrid() {
-    let grid = {};
-    let rowLetter = "A";
+    let grid = [];
     for (let i = 0; i < 10; i++) {
-      grid[rowLetter] = [];
-      for (let j = 1; j <= 10; j++) {
-        grid[rowLetter].push(j);
+      let row = [];
+      for (let j = 0; j < 10; j++) {
+        row.push({ hasShip: false, isHit: false });
       }
-      rowLetter = String.fromCharCode(rowLetter.charCodeAt(0) + 1);
+      grid.push(row);
     }
     return grid;
   }
 
-  placeShip(start, end) {
-  }
+  placeShip(start, end) {}
 
   receiveAttack() {}
 }
