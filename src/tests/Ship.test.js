@@ -2,7 +2,7 @@ import Ship from "../Ship.js";
 
 let ship;
 beforeEach(() => {
-  ship = new Ship(1);
+  ship = new Ship(3);
 });
 
 test("Ship receives a hit", () => {
@@ -21,6 +21,8 @@ test("Ship is not sunk", () => {
 });
 
 test("Ship is sunk", () => {
-  ship.sunk = true;
+  ship.hit();
+  ship.hit();
+  ship.hit();
   expect(ship.isSunk()).toBe(true);
 });

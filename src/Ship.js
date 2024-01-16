@@ -6,10 +6,18 @@ export default class Ship {
   }
 
   hit() {
-    this.hits++;
+    if (!this.sunk) {
+      this.hits++;
+    }
+    this.isSunk();
   }
 
   isSunk() {
+    if (!this.sunk) {
+      if (this.hits === this.length) {
+        this.sunk = true;
+      }
+    }
     return this.sunk;
   }
 }
