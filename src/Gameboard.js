@@ -30,6 +30,14 @@ export default class Gameboard {
     return true;
   }
 
+  fillSpaces(arr) {
+    for (let i = 0; i < arr.length; i++) {
+      const x = arr[i][0];
+      const y = arr[i][1];
+      this.grid[x][y].hasShip = true;
+    }
+  }
+
   // @param position are the coordinates of each space the ship fills
   placeShip(position) {
     if (position.length < 2 || position.length > 5) {
@@ -37,6 +45,7 @@ export default class Gameboard {
     }
     if (this.isSpaceEmpty(position)) {
       const ship = new Ship(position);
+      this.fillSpaces(position);
       this.ships.push(ship);
     } else {
       throw new Error("Those spaces are filled.");

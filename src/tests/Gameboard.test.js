@@ -30,7 +30,16 @@ test("Throw error if ship is illegal length", () => {
     gameboard.placeShip(positionTwo);
   }).toThrow();
 });
-// test("Throw error if ship is placed on non-empty spot", () => {});
+test("Throw error if ship is placed on non-empty spot", () => {
+  let position = [
+    [0, 1],
+    [0, 2],
+  ];
+  gameboard.placeShip(position);
+  expect(() => {
+    gameboard.placeShip(position);
+  }).toThrow();
+});
 // test("Determine if ship is hit after attack");
 // test("Record hit on a specific ship");
 // test("Record coordinates of missed attack");
