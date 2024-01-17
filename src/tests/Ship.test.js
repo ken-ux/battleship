@@ -2,7 +2,12 @@ import Ship from "../Ship.js";
 
 let ship;
 beforeEach(() => {
-  ship = new Ship(3);
+  const position = [
+    [0, 1],
+    [0, 2],
+    [0, 3],
+  ];
+  ship = new Ship(position);
 });
 
 test("Ship receives a hit", () => {
