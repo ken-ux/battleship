@@ -1,4 +1,4 @@
-// import Ship from "./Ship";
+import Ship from "./Ship";
 
 export default class Gameboard {
   constructor() {
@@ -18,7 +18,34 @@ export default class Gameboard {
     return grid;
   }
 
-  placeShip(start, end) {}
+  // Checks if the spaces on the grid are empty
+  isSpaceEmpty(arr) {
+    for (let i = 0; i < arr.length; i++) {
+      const x = arr[i][0];
+      const y = arr[i][1];
+      if (this.grid[x][y].hasShip) {
+        return false;
+      }
+    }
+    return true;
+  }
 
-  receiveAttack() {}
+  // @param position are the coordinates of each space the ship fills
+  placeShip(position) {
+    if (position.length < 2 || position.length > 5) {
+      throw new Error("Illegal ship length.");
+    }
+    if (this.isSpaceEmpty(position)) {
+      const ship = new Ship(position);
+      this.ships.push(ship);
+    } else {
+      throw new Error("Those spaces are filled.");
+    }
+  }
+
+  receiveAttack(x, y) {
+    if (this.grid[x][y].hasShip === true) {
+      this.grid[x][y].isHit = true;
+    }
+  }
 }
