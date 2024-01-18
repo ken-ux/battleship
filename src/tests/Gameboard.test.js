@@ -40,7 +40,16 @@ test("Throw error if ship is placed on non-empty spot", () => {
     gameboard.placeShip(position);
   }).toThrow();
 });
-// test("Determine if ship is hit after attack");
+test("Determine if ship is hit after attack", () => {
+  let position = [
+    [0, 1],
+    [0, 2],
+    [0, 3],
+  ];
+  gameboard.placeShip(position);
+  expect(gameboard.receiveAttack(0, 1)).toBe(true);
+  expect(gameboard.receiveAttack(0, 4)).toBe(false);
+});
 // test("Record hit on a specific ship");
 // test("Record coordinates of missed attack");
 // test("Check if all ships are sunk");

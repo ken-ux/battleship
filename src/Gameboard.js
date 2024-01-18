@@ -55,6 +55,8 @@ export default class Gameboard {
   receiveAttack(x, y) {
     if (this.grid[x][y].hasShip === true) {
       this.grid[x][y].isHit = true;
+      return true;
     }
+    return false;
   }
 }
