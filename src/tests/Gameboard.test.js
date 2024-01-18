@@ -50,6 +50,17 @@ test("Determine if ship is hit after attack", () => {
   expect(gameboard.receiveAttack(0, 1)).toBe(true);
   expect(gameboard.receiveAttack(0, 4)).toBe(false);
 });
+test("Throw error if attacking spot that's already been hit", () => {
+  let position = [
+    [0, 1],
+    [0, 2],
+  ];
+  gameboard.placeShip(position);
+  gameboard.receiveAttack(0, 1);
+  expect(() => {
+    gameboard.receiveAttack(0, 1);
+  }).toThrow();
+});
 // test("Record hit on a specific ship");
 // test("Record coordinates of missed attack");
 // test("Check if all ships are sunk");

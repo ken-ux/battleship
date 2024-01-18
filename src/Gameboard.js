@@ -53,10 +53,15 @@ export default class Gameboard {
   }
 
   receiveAttack(x, y) {
-    if (this.grid[x][y].hasShip === true) {
+    if (!this.grid[x][y].isHit) {
       this.grid[x][y].isHit = true;
-      return true;
+      if (this.grid[x][y].hasShip) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      throw new Error("That spot has already been attacked.");
     }
-    return false;
   }
 }
