@@ -18,6 +18,7 @@ export default class Gameboard {
     return grid;
   }
 
+  // @param arr contains coordinates for each point on the grid
   // Checks if the spaces on the grid are empty
   isSpaceEmpty(arr) {
     for (let i = 0; i < arr.length; i++) {
@@ -30,6 +31,7 @@ export default class Gameboard {
     return true;
   }
 
+  // @param arr contains coordinates for each point on the grid
   fillSpaces(arr) {
     for (let i = 0; i < arr.length; i++) {
       const x = arr[i][0];
@@ -55,7 +57,27 @@ export default class Gameboard {
   receiveAttack(x, y) {
     if (!this.grid[x][y].isHit) {
       this.grid[x][y].isHit = true;
+
+      // Check if there's a ship on the space
       if (this.grid[x][y].hasShip) {
+        let ship_found = false;
+
+        // Find specific ship that was hit
+        for (let i = 0; i < this.ships.length; i++) {
+          if (ship_found) {
+            break;
+          }
+          for (let j = 0; j < this.ships[i].position.length; j++) {
+            if (
+              this.ships[i].position[j][0] === x &&
+              this.ships[i].position[j][1] === y
+            ) {
+              this.ships[i].hit();
+              ship_found = true;
+              break;
+            }
+          }
+        }
         return true;
       } else {
         return false;
