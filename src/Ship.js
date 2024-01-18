@@ -6,14 +6,15 @@ export default class Ship {
     this.position = position;
   }
 
-  hit() {
+  hit = () => {
     if (!this.sunk) {
       this.hits++;
       this.isSunk();
     }
+    return "i did it";
   }
 
-  isSunk() {
+  isSunk = () => {
     if (!this.sunk) {
       if (this.hits === this.length) {
         this.sunk = true;
