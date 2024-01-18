@@ -86,4 +86,13 @@ export default class Gameboard {
       throw new Error("That spot has already been attacked.");
     }
   }
+
+  shipsSunk() {
+    for (let i = 0; i < this.ships.length; i++) {
+      if (!this.ships[i].isSunk()) {
+        return false;
+      }
+    }
+    return true;
+  }
 }

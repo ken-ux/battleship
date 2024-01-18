@@ -84,5 +84,28 @@ test("Record hit on a specific ship", () => {
   expect(gameboard.ships[0].hits).toBe(1);
   expect(gameboard.ships[1].hits).toBe(2);
 });
-// test("Record coordinates of missed attack");
-// test("Check if all ships are sunk");
+
+test("Record coordinates of missed attack", () => {
+  gameboard.receiveAttack(0, 1);
+  expect(gameboard.grid[0][1].isHit).toBe(true);
+  expect(gameboard.grid[0][1].hasShip).toBe(false);
+});
+
+describe("Check if ships are sunk", () => {
+  beforeEach(() => {
+    let position = [
+      [0, 1],
+      [0, 2],
+    ];
+    gameboard.placeShip(position);
+  });
+  test("Ships are not all sunk", () => {
+    gameboard.receiveAttack(0, 1);
+    expect(gameboard.shipsSunk()).toBe(false);
+  });
+  test("Ships are all sunk", () => {
+    gameboard.receiveAttack(0, 1);
+    gameboard.receiveAttack(0, 2);
+    expect(gameboard.shipsSunk()).toBe(true);
+  });
+});
