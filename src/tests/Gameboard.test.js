@@ -79,8 +79,10 @@ test("Record hit on a specific ship", () => {
   gameboard.placeShip(position);
   gameboard.placeShip(positionTwo);
   gameboard.receiveAttack(0, 1);
+  gameboard.receiveAttack(0, 3);
+  gameboard.receiveAttack(0, 4);
   expect(gameboard.ships[0].hits).toBe(1);
-  expect(gameboard.ships[1].hits).toBe(0);
+  expect(gameboard.ships[1].hits).toBe(2);
 });
 // test("Record coordinates of missed attack");
 // test("Check if all ships are sunk");
