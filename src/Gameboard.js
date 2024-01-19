@@ -60,30 +60,35 @@ export default class Gameboard {
 
       // Check if there's a ship on the space
       if (this.grid[x][y].hasShip) {
-        let ship_found = false;
-
         // Find specific ship that was hit
-        for (let i = 0; i < this.ships.length; i++) {
-          if (ship_found) {
-            break;
-          }
-          for (let j = 0; j < this.ships[i].position.length; j++) {
-            if (
-              this.ships[i].position[j][0] === x &&
-              this.ships[i].position[j][1] === y
-            ) {
-              this.ships[i].hit();
-              ship_found = true;
-              break;
-            }
-          }
-        }
+        this.findShip(x, y);
         return true;
       } else {
         return false;
       }
     } else {
       throw new Error("That spot has already been attacked.");
+    }
+  }
+
+  // @returns Ship instance matching the x and y coordinates
+  findShip(x, y) {
+    let ship_found = false;
+
+    for (let i = 0; i < this.ships.length; i++) {
+      if (ship_found) {
+        break;
+      }
+      for (let j = 0; j < this.ships[i].position.length; j++) {
+        if (
+          this.ships[i].position[j][0] === x &&
+          this.ships[i].position[j][1] === y
+        ) {
+          this.ships[i].hit();
+          ship_found = true;
+          break;
+        }
+      }
     }
   }
 
