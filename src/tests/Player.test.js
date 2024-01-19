@@ -21,8 +21,14 @@ test("Computer hits are recorded on player's ships", () => {
   const position = computer.makeMove(player);
   expect(player.gameboard.grid[position[0]][position[1]].isHit).toBe(true);
 });
-// test("Computer can check if space has already been hit");
-// describe("Computer will make a move after player did", () => {
-//   test("Computer hits player's board");
-//   test("Computer will not make a move if all ships are sunk for either player");
-// });
+
+test("Computer can check if space has already been hit", () => {
+  // Mark every space as hit except [0, 1] position
+  player.gameboard.grid.forEach((arr) => {
+    for (let i = 0; i < arr.length; i++) {
+      arr[i].isHit = true;
+    }
+  });
+  player.gameboard.grid[0][1].isHit = false;
+  expect(computer.makeMove(player)).toEqual([0, 1]);
+});
