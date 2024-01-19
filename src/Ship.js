@@ -11,8 +11,7 @@ export default class Ship {
       this.hits++;
       this.isSunk();
     }
-    return "i did it";
-  }
+  };
 
   isSunk = () => {
     if (!this.sunk) {
@@ -21,5 +20,5 @@ export default class Ship {
       }
     }
     return this.sunk;
-  }
+  };
 }
