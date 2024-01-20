@@ -10,11 +10,22 @@ function displaySquares(container, user) {
     const row = document.createElement("div");
     row.classList = "row";
     for (let j = 0; j < user.gameboard.grid[i].length; j++) {
-      const column = document.createElement("div");
-      column.textContent = `${i}, ${j}`;
-      row.appendChild(column);
+      const square = document.createElement("div");
+      square.textContent = `${i}, ${j}, ${user.gameboard.grid[i][j].hasShip}, ${user.gameboard.grid[i][j].isHit}`;
+      square.addEventListener("click", () => {
+        user.gameboard.receiveAttack(i, j);
+        clearSquares(container);
+        displaySquares(container, user);
+      });
+      row.appendChild(square);
     }
     container.appendChild(row);
+  }
+}
+
+function clearSquares(container) {
+  while (container.hasChildNodes()) {
+    container.removeChild(container.firstChild);
   }
 }
 
