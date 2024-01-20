@@ -5,6 +5,19 @@ import { Player, Computer } from "./Player.js";
 const player = new Player();
 const computer = new Computer();
 
+// Populate gameboards with ships, allow users to choose placement later
+player.gameboard.placeShip([
+  [0, 1],
+  [0, 2],
+  [0, 3],
+]);
+
+computer.gameboard.placeShip([
+  [1, 1],
+  [1, 2],
+  [1, 3],
+]);
+
 function displaySquares(container, user) {
   for (let i = 0; i < user.gameboard.grid.length; i++) {
     const row = document.createElement("div");
@@ -12,6 +25,15 @@ function displaySquares(container, user) {
     for (let j = 0; j < user.gameboard.grid[i].length; j++) {
       const square = document.createElement("div");
       square.textContent = `${i}, ${j}, ${user.gameboard.grid[i][j].hasShip}, ${user.gameboard.grid[i][j].isHit}`;
+
+      if (user.gameboard.grid[i][j].hasShip) {
+        square.classList += "filled";
+      }
+
+      if (user.gameboard.grid[i][j].isHit) {
+        square.classList += " hit";
+      }
+
       square.addEventListener("click", () => {
         user.gameboard.receiveAttack(i, j);
         clearSquares(container);

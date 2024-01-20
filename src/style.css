@@ -16,6 +16,14 @@ body,
 
 .row > div {
   border: 1px solid red;
-  width: 32px;
-  height: 32px;
+  width: 50px;
+  height: 50px;
+}
+
+.filled {
+    background-color: yellow;
+}
+
+.hit {
+    background-color: red;
 }
