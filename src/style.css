@@ -21,9 +21,13 @@ body,
 }
 
 .filled {
-    background-color: yellow;
+  background-color: yellow;
 }
 
 .hit {
-    background-color: red;
+  background-color: red;
+}
+
+.filled.hit {
+  background-color: green;
 }

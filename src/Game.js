@@ -26,13 +26,7 @@ function displaySquares(container, user) {
       const square = document.createElement("div");
       square.textContent = `${i}, ${j}, ${user.gameboard.grid[i][j].hasShip}, ${user.gameboard.grid[i][j].isHit}`;
 
-      if (user.gameboard.grid[i][j].hasShip) {
-        square.classList += "filled";
-      }
-
-      if (user.gameboard.grid[i][j].isHit) {
-        square.classList += " hit";
-      }
+      styleSquare(square, user.gameboard.grid[i][j]);
 
       square.addEventListener("click", () => {
         user.gameboard.receiveAttack(i, j);
@@ -42,6 +36,18 @@ function displaySquares(container, user) {
       row.appendChild(square);
     }
     container.appendChild(row);
+  }
+}
+
+// @param square is a node that's a DOM reference for a gameboard space
+// @param position is an object representing a gameboard space
+// Conditionally adds
+function styleSquare(square, position) {
+  if (position.hasShip) {
+    square.classList = "filled";
+  }
+  if (position.isHit) {
+    square.classList += " hit";
   }
 }
 
@@ -57,3 +63,7 @@ displaySquares(playerGameboard, player);
 
 const computerGameboard = document.querySelector("#computer-gameboard");
 displaySquares(computerGameboard, computer);
+
+// Display results
+const p = document.querySelector("p");
+p.textContent = "Winner is written here";
