@@ -20,7 +20,7 @@ body,
   height: 50px;
 }
 
-.filled {
+#player-gameboard .filled {
   background-color: yellow;
 }
 
