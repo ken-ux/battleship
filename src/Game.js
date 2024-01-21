@@ -39,27 +39,30 @@ function displaySquares(container, user) {
       if (user instanceof Computer) {
         // Only lets Player click Computer's gameboard to make move
         square.addEventListener("click", () => {
-          if (!gameOver) {
-            player.makeMove(computer, [i, j]);
-            clearSquares(container);
-            displaySquares(container, user);
-          }
-
-          // Computer makes move unless all their ships are sunk
-          if (computer.gameboard.shipsSunk()) {
-            announceResult();
-            gameOver = true;
-          } else {
-            computer.makeMove(player);
-            clearSquares(playerGameboard);
-            displaySquares(playerGameboard, player);
-          }
+          playerMove(i, j);
         });
       }
 
       row.appendChild(square);
     }
     container.appendChild(row);
+  }
+}
+
+function playerMove(x, y) {
+  if (!gameOver) {
+    player.makeMove(computer, [x, y]);
+    clearSquares(computerGameboard);
+    displaySquares(computerGameboard, computer);
+  }
+  checkShips();
+
+  // Computer makes move unless all their ships are sunk
+  if (!gameOver) {
+    computer.makeMove(player);
+    clearSquares(playerGameboard);
+    displaySquares(playerGameboard, player);
+    checkShips();
   }
 }
 
@@ -82,9 +85,19 @@ function clearSquares(container) {
   }
 }
 
-function announceResult() {
+function announceResult(user) {
   const p = document.querySelector("p");
-  p.textContent = "Winner is written here";
+  p.textContent = `${user} won this game!`;
+}
+
+function checkShips() {
+  if (computer.gameboard.shipsSunk()) {
+    gameOver = true;
+    announceResult("You");
+  } else if (player.gameboard.shipsSunk()) {
+    gameOver = true;
+    announceResult("Computer");
+  }
 }
 
 // Display the player gameboard
