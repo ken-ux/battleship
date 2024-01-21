@@ -4,6 +4,7 @@ import { Player, Computer } from "./Player.js";
 // Initialize player and computer
 const player = new Player();
 const computer = new Computer();
+let gameOver = false;
 
 // Populate gameboards with ships, allow users to choose placement later
 player.gameboard.placeShip([
@@ -33,22 +34,26 @@ function displaySquares(container, user) {
       const square = document.createElement("div");
       square.textContent = `${i}, ${j}, ${user.gameboard.grid[i][j].hasShip}, ${user.gameboard.grid[i][j].isHit}`;
 
-      // Styles player's squares on computer's board
+      styleSquare(square, user.gameboard.grid[i][j]);
+
       if (user instanceof Computer) {
-        styleSquare(square, player.gameboard.grid[i][j], true);
-      }
-
-      if (!(user instanceof Computer)) {
-        // Style computer's squares on player's board
-        styleSquare(square, user.gameboard.grid[i][j], false);
-
-        // Only lets Player click gameboard to make move
+        // Only lets Player click Computer's gameboard to make move
         square.addEventListener("click", () => {
-          user.gameboard.receiveAttack(i, j);
-          clearSquares(container);
-          displaySquares(container, user);
-          // if the computer loses all their ship, end here
-          // else, computer makes their move
+          if (!gameOver) {
+            player.makeMove(computer, [i, j]);
+            clearSquares(container);
+            displaySquares(container, user);
+          }
+
+          // Computer makes move unless all their ships are sunk
+          if (computer.gameboard.shipsSunk()) {
+            announceResult();
+            gameOver = true;
+          } else {
+            computer.makeMove(player);
+            clearSquares(playerGameboard);
+            displaySquares(playerGameboard, player);
+          }
         });
       }
 
@@ -62,14 +67,11 @@ function displaySquares(container, user) {
 // @param position is an object representing a gameboard space
 // @param isPlayer is a boolean that's true if it's a square the player owns
 // Conditionally adds classes to style squares
-function styleSquare(square, position, isPlayer) {
+function styleSquare(square, position) {
   if (position.isHit) {
     square.classList = "hit";
   }
-  if (position.hasShip && isPlayer) {
-    square.classList += " filled";
-  }
-  if (position.isHit && position.hasShip && !isPlayer) {
+  if (position.hasShip) {
     square.classList += " filled";
   }
 }
@@ -80,13 +82,14 @@ function clearSquares(container) {
   }
 }
 
+function announceResult() {
+  const p = document.querySelector("p");
+  p.textContent = "Winner is written here";
+}
+
 // Display the player gameboard
 const playerGameboard = document.querySelector("#player-gameboard");
 displaySquares(playerGameboard, player);
 
 const computerGameboard = document.querySelector("#computer-gameboard");
 displaySquares(computerGameboard, computer);
-
-// Display results
-const p = document.querySelector("p");
-p.textContent = "Winner is written here";
