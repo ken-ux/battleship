@@ -12,6 +12,13 @@ player.gameboard.placeShip([
   [0, 3],
 ]);
 
+player.gameboard.placeShip([
+  [3, 1],
+  [3, 2],
+  [3, 3],
+  [3, 4],
+]);
+
 computer.gameboard.placeShip([
   [1, 1],
   [1, 2],
@@ -26,13 +33,25 @@ function displaySquares(container, user) {
       const square = document.createElement("div");
       square.textContent = `${i}, ${j}, ${user.gameboard.grid[i][j].hasShip}, ${user.gameboard.grid[i][j].isHit}`;
 
-      styleSquare(square, user.gameboard.grid[i][j]);
+      // Styles player's squares on computer's board
+      if (user instanceof Computer) {
+        styleSquare(square, player.gameboard.grid[i][j], true);
+      }
 
-      square.addEventListener("click", () => {
-        user.gameboard.receiveAttack(i, j);
-        clearSquares(container);
-        displaySquares(container, user);
-      });
+      if (!(user instanceof Computer)) {
+        // Style computer's squares on player's board
+        styleSquare(square, user.gameboard.grid[i][j], false);
+
+        // Only lets Player click gameboard to make move
+        square.addEventListener("click", () => {
+          user.gameboard.receiveAttack(i, j);
+          clearSquares(container);
+          displaySquares(container, user);
+          // if the computer loses all their ship, end here
+          // else, computer makes their move
+        });
+      }
+
       row.appendChild(square);
     }
     container.appendChild(row);
@@ -41,13 +60,17 @@ function displaySquares(container, user) {
 
 // @param square is a node that's a DOM reference for a gameboard space
 // @param position is an object representing a gameboard space
-// Conditionally adds
-function styleSquare(square, position) {
-  if (position.hasShip) {
-    square.classList = "filled";
-  }
+// @param isPlayer is a boolean that's true if it's a square the player owns
+// Conditionally adds classes to style squares
+function styleSquare(square, position, isPlayer) {
   if (position.isHit) {
-    square.classList += " hit";
+    square.classList = "hit";
+  }
+  if (position.hasShip && isPlayer) {
+    square.classList += " filled";
+  }
+  if (position.isHit && position.hasShip && !isPlayer) {
+    square.classList += " filled";
   }
 }
 
