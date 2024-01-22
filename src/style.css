@@ -28,6 +28,7 @@ body,
   background-color: red;
 }
 
-.filled.hit {
+.filled.hit,
+#player-gameboard .filled.hit {
   background-color: green;
 }
