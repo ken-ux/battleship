@@ -4,21 +4,11 @@ import { Player, Computer } from "./Player.js";
 // Initialize player and computer
 const player = new Player();
 const computer = new Computer();
+
+// Variables to determine what phase the game is in
+let shipPhase = true;
+const shipLengths = [5, 4, 3, 3, 2];
 let gameOver = false;
-
-// Populate gameboards with ships, allow users to choose placement later
-player.gameboard.placeShip([
-  [0, 1],
-  [0, 2],
-  [0, 3],
-]);
-
-player.gameboard.placeShip([
-  [3, 1],
-  [3, 2],
-  [3, 3],
-  [3, 4],
-]);
 
 computer.gameboard.placeShip([
   [1, 1],
@@ -32,11 +22,17 @@ function displaySquares(container, user) {
     row.classList = "row";
     for (let j = 0; j < user.gameboard.grid[i].length; j++) {
       const square = document.createElement("div");
+      //   square.textContent = i + ", " + j;
       square.textContent = `${i}, ${j}, ${user.gameboard.grid[i][j].hasShip}, ${user.gameboard.grid[i][j].isHit}`;
 
       styleSquare(square, user.gameboard.grid[i][j]);
 
-      if (user instanceof Computer) {
+      if (shipPhase) {
+        // Place ships on player's board
+        if (!(user instanceof Computer)) {
+          placeShips(i, j, square);
+        }
+      } else if (user instanceof Computer) {
         // Only lets Player click Computer's gameboard to make move
         square.addEventListener("click", () => {
           playerMove(i, j);
@@ -46,6 +42,28 @@ function displaySquares(container, user) {
       row.appendChild(square);
     }
     container.appendChild(row);
+  }
+}
+
+function placeShips(verticalPos, horizontalPos, square) {
+  if (horizontalPos + shipLengths[0] <= player.gameboard.grid.length) {
+    square.addEventListener("click", () => {
+      let position = [];
+      for (let i = 0; i < shipLengths[0]; i++) {
+        position.push([verticalPos, horizontalPos + i]);
+      }
+      player.gameboard.placeShip(position);
+      shipLengths.shift();
+      clearSquares(playerGameboard);
+      displaySquares(playerGameboard, player);
+
+      // if no more ships to place, ship phase is over
+      if (shipLengths.length === 0) {
+        shipPhase = false;
+        clearSquares(computerGameboard);
+        displaySquares(computerGameboard, computer);
+      }
+    });
   }
 }
 
