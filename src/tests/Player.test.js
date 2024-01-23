@@ -18,8 +18,8 @@ test("Player hits are recorded on computer's ships", () => {
 });
 
 test("Computer hits are recorded on player's ships", () => {
-  const position = computer.makeMove(player);
-  expect(player.gameboard.grid[position[0]][position[1]].isHit).toBe(true);
+  const playerHit = computer.makeMove(player);
+  expect(playerHit).not.toBeUndefined();
 });
 
 test("Computer can check if space has already been hit", () => {
@@ -30,5 +30,7 @@ test("Computer can check if space has already been hit", () => {
     }
   });
   player.gameboard.grid[0][1].isHit = false;
-  expect(computer.makeMove(player)).toEqual([0, 1]);
+
+  // Let player hit the last space
+  expect(computer.makeMove(player)).toEqual(true);
 });

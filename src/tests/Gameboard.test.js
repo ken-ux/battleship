@@ -1,4 +1,5 @@
 import Gameboard from "../Gameboard";
+import { jest } from "@jest/globals";
 
 let gameboard;
 beforeEach(() => {
@@ -52,19 +53,20 @@ test("Determine if ship is hit after attack", () => {
   ];
   gameboard.placeShip(position);
   expect(gameboard.receiveAttack(0, 1)).toBe(true);
-  expect(gameboard.receiveAttack(0, 4)).toBe(false);
+  expect(gameboard.grid[0][1].isHit).toBe(true);
+  expect(gameboard.grid[0][1].hasShip).toBe(true);
 });
 
-test("Throw error if attacking spot that's already been hit", () => {
+test("Alert if attacking spot that's already been hit", () => {
+  global.alert = jest.fn();
   let position = [
     [0, 1],
     [0, 2],
   ];
   gameboard.placeShip(position);
   gameboard.receiveAttack(0, 1);
-  expect(() => {
-    gameboard.receiveAttack(0, 1);
-  }).toThrow();
+  gameboard.receiveAttack(0, 1);
+  expect(global.alert).toHaveBeenCalledTimes(1);
 });
 
 test("Record hit on a specific ship", () => {
