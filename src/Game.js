@@ -48,17 +48,18 @@ function placePlayerShips(verticalPos, horizontalPos, square) {
       for (let i = 0; i < shipLengths[0]; i++) {
         position.push([verticalPos, horizontalPos + i]);
       }
-      player.gameboard.placeShip(position);
-      shipLengths.shift();
-      clearSquares(playerGameboard);
-      displaySquares(playerGameboard, player);
-      result.textContent = `Place another battleship on the board! It is ${shipLengths[0]} units long.`;
+      if (player.gameboard.placeShip(position)) {
+        shipLengths.shift();
+        clearSquares(playerGameboard);
+        displaySquares(playerGameboard, player);
+        result.textContent = `Place another battleship on the board! It is ${shipLengths[0]} units long.`;
 
-      // If no more ships to place, ship phase is over
-      if (shipLengths.length === 0) {
-        result.textContent = "Click on the Computer's board to make a move.";
-        shipPhase = false;
-        placeComputerShips();
+        // If no more ships to place, ship phase is over
+        if (shipLengths.length === 0) {
+          result.textContent = "Click on the Computer's board to make a move.";
+          shipPhase = false;
+          placeComputerShips();
+        }
       }
     });
   }
@@ -99,15 +100,17 @@ function placeComputerShips() {
 }
 
 function playerMove(x, y) {
+  let validMove;
   if (!gameOver) {
-    player.makeMove(computer, [x, y]);
+    validMove = player.makeMove(computer, [x, y]);
+    console.log(validMove);
     clearSquares(computerGameboard);
     displaySquares(computerGameboard, computer);
   }
   checkShips();
 
   // Computer makes move unless all their ships are sunk
-  if (!gameOver) {
+  if (!gameOver && validMove) {
     computer.makeMove(player);
     clearSquares(playerGameboard);
     displaySquares(playerGameboard, player);

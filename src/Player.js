@@ -8,7 +8,7 @@ export class Player {
   // @param opponent is an instance of the Computer class
   // @param position is an array containing the coordinates to attack, [x, y]
   makeMove(opponent, position) {
-    opponent.gameboard.receiveAttack(position[0], position[1]);
+    return opponent.gameboard.receiveAttack(position[0], position[1]);
   }
 }
 
@@ -29,7 +29,6 @@ export class Computer extends Player {
       randomY = Math.floor(Math.random() * max);
     }
 
-    opponent.gameboard.receiveAttack(randomX, randomY);
-    return [randomX, randomY];
+    return opponent.gameboard.receiveAttack(randomX, randomY);
   }
 }
