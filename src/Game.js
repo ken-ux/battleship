@@ -10,11 +10,7 @@ let shipPhase = true;
 const shipLengths = [5, 4, 3, 3, 2];
 let gameOver = false;
 
-computer.gameboard.placeShip([
-  [1, 1],
-  [1, 2],
-  [1, 3],
-]);
+const result = document.querySelector("#result");
 
 function displaySquares(container, user) {
   for (let i = 0; i < user.gameboard.grid.length; i++) {
@@ -30,7 +26,7 @@ function displaySquares(container, user) {
       if (shipPhase) {
         // Place ships on player's board
         if (!(user instanceof Computer)) {
-          placeShips(i, j, square);
+          placePlayerShips(i, j, square);
         }
       } else if (user instanceof Computer) {
         // Only lets Player click Computer's gameboard to make move
@@ -45,7 +41,7 @@ function displaySquares(container, user) {
   }
 }
 
-function placeShips(verticalPos, horizontalPos, square) {
+function placePlayerShips(verticalPos, horizontalPos, square) {
   if (horizontalPos + shipLengths[0] <= player.gameboard.grid.length) {
     square.addEventListener("click", () => {
       let position = [];
@@ -56,15 +52,50 @@ function placeShips(verticalPos, horizontalPos, square) {
       shipLengths.shift();
       clearSquares(playerGameboard);
       displaySquares(playerGameboard, player);
+      result.textContent = `Place another battleship on the board! It is ${shipLengths[0]} units long.`;
 
-      // if no more ships to place, ship phase is over
+      // If no more ships to place, ship phase is over
       if (shipLengths.length === 0) {
+        result.textContent = "Click on the Computer's board to make a move.";
         shipPhase = false;
-        clearSquares(computerGameboard);
-        displaySquares(computerGameboard, computer);
+        placeComputerShips();
       }
     });
   }
+}
+
+function placeComputerShips() {
+  let shipLengths = [5, 4, 3, 3, 2];
+  while (shipLengths.length > 0) {
+    let validSpaces = true;
+    let horizontalPos = Math.floor(
+      Math.random() * (computer.gameboard.grid.length - shipLengths[0])
+    );
+    let verticalPos = Math.floor(
+      Math.random() * computer.gameboard.grid.length
+    );
+
+    // Check if the ship can be placed without colliding with other ships
+    for (let i = 0; i < shipLengths[0]; i++) {
+      if (computer.gameboard.grid[verticalPos][horizontalPos + i].hasShip) {
+        validSpaces = false;
+        break;
+      }
+    }
+
+    if (!validSpaces) {
+      continue;
+    } else {
+      let position = [];
+      for (let i = 0; i < shipLengths[0]; i++) {
+        position.push([verticalPos, horizontalPos + i]);
+      }
+      computer.gameboard.placeShip(position);
+      shipLengths.shift();
+    }
+  }
+  clearSquares(computerGameboard);
+  displaySquares(computerGameboard, computer);
 }
 
 function playerMove(x, y) {
@@ -103,18 +134,13 @@ function clearSquares(container) {
   }
 }
 
-function announceResult(user) {
-  const p = document.querySelector("p");
-  p.textContent = `${user} won this game!`;
-}
-
 function checkShips() {
   if (computer.gameboard.shipsSunk()) {
     gameOver = true;
-    announceResult("You");
+    result.textContent = "You have won this game!";
   } else if (player.gameboard.shipsSunk()) {
     gameOver = true;
-    announceResult("Computer");
+    result.textContent = "Computer won this game!";
   }
 }
 
