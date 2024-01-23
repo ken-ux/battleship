@@ -18,8 +18,7 @@ function displaySquares(container, user) {
     row.classList = "row";
     for (let j = 0; j < user.gameboard.grid[i].length; j++) {
       const square = document.createElement("div");
-      //   square.textContent = i + ", " + j;
-      square.textContent = `${i}, ${j}, ${user.gameboard.grid[i][j].hasShip}, ${user.gameboard.grid[i][j].isHit}`;
+      //   square.textContent = `${i}, ${j}, ${user.gameboard.grid[i][j].hasShip}, ${user.gameboard.grid[i][j].isHit}`;
 
       styleSquare(square, user.gameboard.grid[i][j]);
 
@@ -125,9 +124,13 @@ function playerMove(x, y) {
 function styleSquare(square, position) {
   if (position.isHit) {
     square.classList = "hit";
+    square.textContent = "✕";
   }
   if (position.hasShip) {
     square.classList += " filled";
+  }
+  if (position.isHit && position.hasShip) {
+    square.textContent = "○";
   }
 }
 
