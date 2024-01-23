@@ -49,8 +49,10 @@ export default class Gameboard {
       const ship = new Ship(position);
       this.fillSpaces(position);
       this.ships.push(ship);
+      return true;
     } else {
-      throw new Error("Those spaces are filled.");
+      alert("Those spaces are filled.");
+      return false;
     }
   }
 
@@ -62,12 +64,11 @@ export default class Gameboard {
       if (this.grid[x][y].hasShip) {
         // Find specific ship that was hit
         this.findShip(x, y);
-        return true;
-      } else {
-        return false;
       }
+      return true;
     } else {
-      throw new Error("That spot has already been attacked.");
+      alert("That spot has already been attacked.");
+      return false;
     }
   }
 
