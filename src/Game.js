@@ -143,10 +143,10 @@ function clearSquares(container) {
 function checkShips() {
   if (computer.gameboard.shipsSunk()) {
     gameOver = true;
-    result.textContent = "You have won this game!";
+    result.textContent = "Enemy ships are all sunk! You won!";
   } else if (player.gameboard.shipsSunk()) {
     gameOver = true;
-    result.textContent = "Computer won this game!";
+    result.textContent = "Player ships are all sunk! You lost.";
   }
 }
 
