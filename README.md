@@ -1,6 +1,6 @@
 # battleship
 
-This is a browser-based version of [Battleship](<https://en.wikipedia.org/wiki/Battleship_(game)>).
+This is a browser-based version of [Battleship](<https://en.wikipedia.org/wiki/Battleship_(game)>). It can be played here: <https://ken-ux.github.io/battleship/>.
 
 ## How to Play
 
