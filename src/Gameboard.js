@@ -6,6 +6,7 @@ export default class Gameboard {
     this.ships = [];
   }
 
+  // Creates grid that players use to play the game.
   createGrid() {
     let grid = [];
     for (let i = 0; i < 10; i++) {
@@ -18,29 +19,34 @@ export default class Gameboard {
     return grid;
   }
 
-  // @param arr contains coordinates for each point on the grid
-  // Checks if the spaces on the grid are empty
+  // Checks if there's a ship on a specified number of spaces.
+  // @param arr: Array of arrays representing the x-y coordinates to check.
+  // @returns false if any space has a ship, otherwise returns false.
   isSpaceEmpty(arr) {
     for (let i = 0; i < arr.length; i++) {
-      const x = arr[i][0];
-      const y = arr[i][1];
-      if (this.grid[x][y].hasShip) {
+      const verticalPos = arr[i][0];
+      const horizontaPos = arr[i][1];
+      if (this.grid[verticalPos][horizontaPos].hasShip) {
         return false;
       }
     }
     return true;
   }
 
-  // @param arr contains coordinates for each point on the grid
+  // Fills a specified number of empty spaces with a ship.
+  // @param arr: Array of arrays representing the x-y coordinates to fill.
   fillSpaces(arr) {
     for (let i = 0; i < arr.length; i++) {
-      const x = arr[i][0];
-      const y = arr[i][1];
-      this.grid[x][y].hasShip = true;
+      const verticalPos = arr[i][0];
+      const horizontalPos = arr[i][1];
+      this.grid[verticalPos][horizontalPos].hasShip = true;
     }
   }
 
-  // @param position are the coordinates of each space the ship fills
+  // Places a ship on the gameboard.
+  // @param position: Array of arrays representing the x-y coordinates to place a ship.
+  // @throws an error if the ship being placed is too short or too long.
+  // @returns true if the ships are placed successfully, otherwise returns false.
   placeShip(position) {
     if (position.length < 2 || position.length > 5) {
       throw new Error("Illegal ship length.");
@@ -56,14 +62,17 @@ export default class Gameboard {
     }
   }
 
-  receiveAttack(x, y) {
-    if (!this.grid[x][y].isHit) {
-      this.grid[x][y].isHit = true;
+  // Receive an attack on the gameboard unless it's already been attacked.
+  // @param verticalPos: Integer representing vertical positioning on a board.
+  // @param horizontalPos: Integer representing horizontal positioning on a board.
+  receiveAttack(verticalPos, horizontaPos) {
+    if (!this.grid[verticalPos][horizontaPos].isHit) {
+      this.grid[verticalPos][horizontaPos].isHit = true;
 
       // Check if there's a ship on the space
-      if (this.grid[x][y].hasShip) {
+      if (this.grid[verticalPos][horizontaPos].hasShip) {
         // Find specific ship that was hit
-        this.findShip(x, y);
+        this.findShip(verticalPos, horizontaPos);
       }
       return true;
     } else {
@@ -72,8 +81,10 @@ export default class Gameboard {
     }
   }
 
-  // @returns Ship instance matching the x and y coordinates
-  findShip(x, y) {
+  // Finds a specific ship that was attacked and adds a hit to it.
+  // @param verticalPos: Integer representing vertical positioning on a board.
+  // @param horizontalPos: Integer representing horizontal positioning on a board.
+  findShip(verticalPos, horizontaPos) {
     let ship_found = false;
 
     for (let i = 0; i < this.ships.length; i++) {
@@ -82,8 +93,8 @@ export default class Gameboard {
       }
       for (let j = 0; j < this.ships[i].position.length; j++) {
         if (
-          this.ships[i].position[j][0] === x &&
-          this.ships[i].position[j][1] === y
+          this.ships[i].position[j][0] === verticalPos &&
+          this.ships[i].position[j][1] === horizontaPos
         ) {
           this.ships[i].hit();
           ship_found = true;
@@ -93,6 +104,8 @@ export default class Gameboard {
     }
   }
 
+  // Checks if ships are all ships are sunk.
+  // @returns false if any ship isn't sunk, otherwise returns true.
   shipsSunk() {
     for (let i = 0; i < this.ships.length; i++) {
       if (!this.ships[i].isSunk()) {
