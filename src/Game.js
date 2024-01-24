@@ -1,11 +1,11 @@
 import "./style.css";
 import { Player, Computer } from "./Player.js";
 
-// Initialize player and computer
+// Initialize player and computer.
 const player = new Player();
 const computer = new Computer();
 
-// Variables to determine what phase the game is in
+// Variables to determine what phase the game is in.
 let shipPhase = true;
 const shipLengths = [5, 4, 3, 3, 2];
 let gameOver = false;
@@ -23,12 +23,12 @@ function displaySquares(container, user) {
       styleSquare(square, user.gameboard.grid[i][j]);
 
       if (shipPhase) {
-        // Place ships on player's board
+        // Place ships on player's board.
         if (!(user instanceof Computer)) {
           placePlayerShips(i, j, square);
         }
       } else if (user instanceof Computer) {
-        // Only lets Player click Computer's gameboard to make move
+        // Only lets Player click Computer's gameboard to make move.
         square.addEventListener("click", () => {
           playerMove(i, j);
         });
@@ -40,6 +40,10 @@ function displaySquares(container, user) {
   }
 }
 
+// Lets user place ships on their board.
+// @param verticalPos: Integer representing vertical positioning on a board.
+// @param horizontalPos: Integer representing horizontal positioning on a board.
+// @param square: Node that's a DOM reference for a gameboard space.
 function placePlayerShips(verticalPos, horizontalPos, square) {
   if (horizontalPos + shipLengths[0] <= player.gameboard.grid.length) {
     square.addEventListener("click", () => {
@@ -53,7 +57,7 @@ function placePlayerShips(verticalPos, horizontalPos, square) {
         displaySquares(playerGameboard, player);
         result.textContent = `Place another battleship on the board! It is ${shipLengths[0]} units long.`;
 
-        // If no more ships to place, ship phase is over
+        // If no more ships to place, ship phase is over and attack phase begins.
         if (shipLengths.length === 0) {
           result.textContent = "Click on the Computer's board to make a move.";
           shipPhase = false;
@@ -64,6 +68,7 @@ function placePlayerShips(verticalPos, horizontalPos, square) {
   }
 }
 
+// Places ships on the computer's board randomly without colliding.
 function placeComputerShips() {
   let shipLengths = [5, 4, 3, 3, 2];
   while (shipLengths.length > 0) {
@@ -75,7 +80,7 @@ function placeComputerShips() {
       Math.random() * computer.gameboard.grid.length
     );
 
-    // Check if the ship can be placed without colliding with other ships
+    // Check if the ship can be placed without colliding with other ships.
     for (let i = 0; i < shipLengths[0]; i++) {
       if (computer.gameboard.grid[verticalPos][horizontalPos + i].hasShip) {
         validSpaces = false;
@@ -98,17 +103,23 @@ function placeComputerShips() {
   displaySquares(computerGameboard, computer);
 }
 
-function playerMove(x, y) {
+// Lets player attack the opponent's board and allows the opponent to
+// follow-up with their own attack.
+// @param verticalPos: Integer representing vertical positioning on a board.
+// @param horizontalPos: Integer representing horizontal positioning on a board.
+function playerMove(verticalPos, horizontalPos) {
+  // Ensures the user is not clicking the same space twice.
   let validMove;
+
   if (!gameOver) {
-    validMove = player.makeMove(computer, [x, y]);
+    validMove = player.makeMove(computer, [verticalPos, horizontalPos]);
     console.log(validMove);
     clearSquares(computerGameboard);
     displaySquares(computerGameboard, computer);
   }
   checkShips();
 
-  // Computer makes move unless all their ships are sunk
+  // Computer makes move unless all their ships are sunk.
   if (!gameOver && validMove) {
     computer.makeMove(player);
     clearSquares(playerGameboard);
@@ -117,10 +128,9 @@ function playerMove(x, y) {
   }
 }
 
-// @param square is a node that's a DOM reference for a gameboard space
-// @param position is an object representing a gameboard space
-// @param isPlayer is a boolean that's true if it's a square the player owns
-// Conditionally adds classes to style squares
+// Styles a square on the gameboard.
+// @param square: Node that's a DOM reference for a gameboard space.
+// @param position: Object representing a gameboard space.
 function styleSquare(square, position) {
   if (position.isHit) {
     square.classList = "hit";
@@ -134,12 +144,16 @@ function styleSquare(square, position) {
   }
 }
 
+// Clears squares from a gameboard.
+// @param gameboard: Node that's a DOM reference to either the player or computer's gameboard.
 function clearSquares(container) {
   while (container.hasChildNodes()) {
     container.removeChild(container.firstChild);
   }
 }
 
+// Checks whether the all the player's or computer's ships sunk and
+// updates the result message for the player accordingly.
 function checkShips() {
   if (computer.gameboard.shipsSunk()) {
     gameOver = true;
@@ -150,9 +164,8 @@ function checkShips() {
   }
 }
 
-// Display the player gameboard
+// Display the player and computer gameboards.
 const playerGameboard = document.querySelector("#player-gameboard");
 displaySquares(playerGameboard, player);
-
 const computerGameboard = document.querySelector("#computer-gameboard");
 displaySquares(computerGameboard, computer);
